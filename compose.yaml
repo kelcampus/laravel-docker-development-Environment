@@ -1,0 +1,76 @@
+# https://github.com/compose-spec/compose-spec/blob/master/spec.md
+version: "3"
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: ./services/php/Dockerfile
+      args:
+        PHP_IMAGE: ${PHP_IMAGE}
+        WORK_DIR: ${WORK_DIR}
+        NVM_VER: ${NVM_VER}
+        NODE_VER: ${NODE_VER}
+        USER_ADD: ${USER_ADD}
+        UID: ${UID}
+    environment:
+      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME}
+      WSL_ROOT_PATH: ${WSL_ROOT_PATH}
+      APP_BUILD: ${APP_BUILD}
+    volumes:
+      - ./services/php/conf.d:/usr/local/etc/php/conf.d
+      - ./app:${WORK_DIR}
+      - ./build:${APP_BUILD}
+    restart: always
+    ports:
+      - ${VITE_PORT}:${VITE_PORT}
+    networks:
+      - mynetwork
+
+  web:
+    build:
+      context: .
+      dockerfile: ./services/nginx/Dockerfile
+      args:
+        WORK_DIR: ${WORK_DIR}
+        NGINX_IMAGE: ${NGINX_IMAGE}
+    volumes:
+      - ./services/nginx/templates:/etc/nginx/templates
+      - ./app:${WORK_DIR}
+    restart: always
+    ports:
+      - ${NGINX_PORT}:80
+    environment:
+      WORK_DIR: ${WORK_DIR}
+    command: [nginx-debug, '-g', 'daemon off;'] #only dev
+    depends_on:
+      - php
+    links:
+      - php
+    networks:
+      - mynetwork
+  mysql:
+    build:
+      context: .
+      dockerfile: ./services/mysql/Dockerfile
+      args:
+        WORK_DIR: ${WORK_DIR}
+        MARIADB_IMAGE: ${MARIADB_IMAGE}
+    volumes:
+      - ./services/mysql/dbdata:/var/lib/mysql
+      - ./services/mysql/conf.d:/etc/mysql/conf.d
+      - ./build:${APP_BUILD}
+    restart: always
+    ports:
+      - ${MYSQL_PORT}:3306
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    networks:
+      - mynetwork
+networks:
+  mynetwork:
+    name: ${NETWORK_STAGE_NAME}
+    driver: bridge
