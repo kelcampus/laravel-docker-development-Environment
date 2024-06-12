@@ -11,46 +11,47 @@ Ambiente de desenvolvimento para [Laravel 11](https://laravel.com/docs/11.x) uti
 - WSL com git instalado e configurado;
 
 ## Serviços
-- [php 8.2-fpm](https://hub.docker.com/_/php);
-- [nginx 1.23](https://hub.docker.com/_/nginx);
-- [mariadb 10.9](https://hub.docker.com/_/mariadb).
-
-## Gerenciadores de Pacotes
-- [composer](https://hub.docker.com/_/composer) latest stable version;
-- [nvm 0.39.3](https://hub.docker.com/_/mariadb);
-- [nodejs](https://nodejs.org/en/) versão base 19.3.0 instalado via [nvm](https://github.com/nvm-sh/nvm);  
-- [npm](https://docs.npmjs.com) latest version instalado via [nvm](https://github.com/nvm-sh/nvm).
+- [php 8.3-fpm](https://hub.docker.com/_/php);
+- [nginx 1.27](https://hub.docker.com/_/nginx);
+- [mariadb 11.4](https://hub.docker.com/_/mariadb).
 
 ## Extensões PHP
-- bcmath;
+- [Extensões requiridas pelo laravel](https://laravel.com/docs/11.x/deployment#server-requirements)
 - gd;
-- pdo_mysql;
 - zip;
 - [xdebug](https://xdebug.org/docs/install#pecl);
 - [phpcs](https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar).
 
+## Gerenciadores de Pacotes
+- [composer](https://hub.docker.com/_/composer) latest stable version;
+- [nvm 0.39.7](https://hub.docker.com/_/mariadb);
+- [nodejs](https://nodejs.org/en/) versão base 20.14.0 instalado via [nvm](https://github.com/nvm-sh/nvm);  
+- [npm](https://docs.npmjs.com) latest version instalado via [nvm](https://github.com/nvm-sh/nvm).
+
 ## Download e Configuração
 
-Vamos assumir que você está logado no **WSL** e a pasta raiz do nosso projeto é "/apps/meuproejto/": 
+Vamos assumir que você está logado no **WSL** e a pasta raiz do nosso projeto é "/home/[user]/apps/meuproejto/" onde [user] é o nome do seu usuário no WSL: 
 
 1. Clone o repositório que contém os arquivos da estrutura de containers.
 
-        git clone git@gitlab.com:SAN-Internet-Brasil/docker/laravel/laravel9-docker-development-environment.git .
+        git@gitlab.com:SAN-Internet-Brasil/docker/laravel/laravel-docker-development-environment.git .
 
 2. Você pode excluir alguns arquivos se desejar:
     - .git;
     - CHANGELOG.md;
     - README.md;
-3. Renomeie o arquivo "/apps/meuproejto/.env-example" para ["/apps/meuproejto/.env"](https://docs.docker.com/compose/environment-variables) e configure-o conforme necessário;    
-4. Configure o arquivo "/apps/meuproejto/build/.env-laravel" com o seu .env de desenvolvimento utilizado no seu projeto Laravel.
+
+3. Renomeie o arquivo "/home/[user]/apps/meuproejto/.env-example" para ["/home/[user]/apps/meuproejto/.env"](https://docs.docker.com/compose/environment-variables) e configure-o conforme necessário;    
+
+4. Configure o arquivo "/home/[user]/apps/meuproejto/build/.env-laravel" com o seu .env de desenvolvimento utilizado no seu projeto Laravel.
 
 ## Criando os Containers
 
 1. Na raiz (no mesmo nível do arquivo compose.yaml) crie os containers executando o comando:
 
-        DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose up --build -d
+        docker compose up --build -d
 
-2. Após a criação dos 3 containers (php, mysql e web) e para garantir que tudo está certo, você pode fazer alguns testes. Acesse o shell do **container php** e verifique as versões dos serviços instalados:
+2. Após a criação dos 3 containers (php, mysql e web) e para garantir que tudo esteja certo, você pode fazer alguns testes. Acesse o shell do **container php** e verifique as versões dos serviços instalados:
 
         # php -v        
         # node -v
@@ -58,15 +59,15 @@ Vamos assumir que você está logado no **WSL** e a pasta raiz do nosso projeto 
         # composer --version
         # phpcs --version
 
-3. Se quiser ver o php funcionando antes de clonar seu projeto Laravel, você pode criar um arquivo index.php (com um phpinfo() dentro) no caminho "/apps/meuprojeto/app/public/index.php" e acessar via browse conforme configurado no seu /apps/meuprojeto/.env, por exemplo **http://IPLOCAL:NGINX_PORT** ou http://localhost:NGINX_PORT;
+3. Se quiser ver o php funcionando antes de clonar seu projeto Laravel, você pode criar um arquivo index.php (com um phpinfo() dentro) no caminho "/home/[user]/apps/meuproejto/app/public/index.php" e acessar via browse conforme configurado no seu **/home/[user]/apps/meuproejto/.env**, por exemplo **http://IPLOCAL:NGINX_PORT** ou http://localhost:NGINX_PORT;
 
-4. Para testar o banco de dados, faça o acesso utilizando um gerenciador de sua preferência com os dados de acesso configurados no /apps/meuprojeto/.env. Lembrando que o banco de dados é criado com as informações do /apps/meuprojeto/.env somente se ainda não existir, caso contrário nenhuma alteração será realizada no banco.
+4. Para testar o banco de dados, faça o acesso utilizando um gerenciador de sua preferência com os dados de acesso configurados no **/home/[user]/apps/meuproejto/meuprojeto/.env**. Lembrando que o banco de dados é criado com as informações do **/home/[user]/apps/meuproejto/.env** somente se ainda não existir, caso contrário nenhuma alteração será realizada no banco.
 
 4. Até este ponto, temos os containers funcionais e a partir daqui podemos instalar o nosso projeto principal em Laravel. Se você utilizou o VSCode para alterar os arquivos, feche-o. 
 
 ## Clonando o projeto Laravel
-1. Acesse o WSL via shell em **/apps/meuprojeto/app**;
-2. Delete o arquivo "/apps/meuprojeto/app/.gitkeep" e qualquer outro, a pasta /apps/meuprojeto/app deve estar vazia, caso contrário não será possível clonar o repositório;
+1. Acesse o WSL via shell em **/home/[user]/apps/meuproejto/app**;
+2. Delete o arquivo **/home/[user]/apps/meuproejto/app/.gitkeep** e qualquer outro, a pasta **/home/[user]/apps/meuproejto/app** deve estar vazia, caso contrário não será possível clonar o repositório;
 3. Clone o repositório do projeto:
 
         git clone REPOSITORIO-DO-MEU-PROJETO .
@@ -74,11 +75,11 @@ Vamos assumir que você está logado no **WSL** e a pasta raiz do nosso projeto 
 ## Configurando o Laravel
 1. Abra o VSCode na raiz do seu projeto:
 
-        code /apps/meuprojeto/app . 
+        code /home/[user]/apps/meuproejto/app . 
 
 2. Acesse o shell do container php via VSCode, ou se preferir via shell no WSL;
 
-3. Renomeio o arquivo .env.example para .env e configure-o conforme necessário. 
+3. Renomeio o arquivo .env.example do laravel para .env e configure-o conforme necessário. 
 
 3. Atualize os pacotes dependentes do composer:
 
@@ -94,37 +95,40 @@ Vamos assumir que você está logado no **WSL** e a pasta raiz do nosso projeto 
 A partir deste ponto seu projeto deve estar funcional.
 
 ## Outros Comandos para containers
+
 Todos os comandos do docker compose cli estão em: https://docs.docker.com/compose/reference/. Os comandos abaixo devem ser executados no mesmo nível do arquivo **compose.yaml**.
 
-OBS: php nos comandos abaixo é o nome de um container específico. 
+OBS: **php** nos comandos abaixo é o nome de um container específico. 
 
-### Parar todos os containers do projeto
+### Parar a execução de todos os containers do projeto
 
     docker compose stop
 
 ### Remover todos os dados de containers parados (INDEPENDENTE DE PROJETO)
 
+Cuidado ao executar esse comando. **TUDO** relacionado ao containers que não estão em execução no momento será **DELETADO**.
+
     docker system prune -a
 
 ### Recriar todos os containers 
 
-    DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose up --build -d
+    docker compose up --build -d
 
 ### Recriar um container 
 
-    DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose up --build --force-recreate -d NOME_CONTAINER
+    docker compose up --build --force-recreate -d NOME_CONTAINER
 
 ### Construir uma imagem verificando os logs
 
-    DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose build php --no-cache --progress=plain
+    docker compose build php --no-cache --progress=plain
 
 ### Remover todos os containers parados
 
-    DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose rm
+    docker compose rm
 
 ### iniciar todos os containers
 
-    DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose start
+    docker compose start
 
 ## xDebug com VSCode
 
@@ -171,7 +175,7 @@ O VSCode é instalado no windows e tem acesso ao WSL via plugin, permitindo exec
 
 Para resolver isso, executamos um script que cria um alias para o comando php no WSL apontando para um container php específico. No caso de projetos com php de versões diferentes, basta ajustar o script para a versão do projeto atual.
 
-Acesse "/apps/meuprojeto/build" e execute o script wsl-php-phpcs-vscode.sh.
+Acesse **/home/[user]/apps/meuproejto/build** e execute o script wsl-php-phpcs-vscode.sh.
 
     // tornar executável, se não estiver
     chmod +x wsl-php-phpcs-vscode.sh
