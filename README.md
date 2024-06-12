@@ -1,6 +1,6 @@
 # Laravel 11 Projects
 
-Ambiente de desenvolvimento para [Laravel 9](https://laravel.com/docs/9.x/releases) baseado em múltiplos containers.
+Ambiente de desenvolvimento para [Laravel 11](https://laravel.com/docs/11.x) utilizando [Docker Compose](https://docs.docker.com/compose/).
  
 ## Requisitos
 
