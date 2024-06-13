@@ -1,0 +1,5 @@
+.git
+app/**
+services/**
+.vscode
+.editorconfig
