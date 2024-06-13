@@ -1,0 +1,5 @@
+/services/mysql/dbdata/*
+.env
+.vscode
+/app/*
+!/app/.gitkeep
