@@ -34,7 +34,7 @@ Vamos assumir que você está logado no **WSL** e a pasta raiz do nosso projeto 
 
 1. Clone o repositório que contém os arquivos da estrutura de containers.
 
-       https://github.com/kelcampus/laravel-docker-development-environment.git .
+        git@gitlab.com:kelcampus/laravel-docker-development-environment.git
 
 2. Você pode excluir alguns arquivos se desejar:
     - .git;
